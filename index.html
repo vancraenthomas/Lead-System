@@ -26,7 +26,7 @@ a{color:var(--cyan);text-decoration:none}
 .btn-primary{background:var(--neon);color:var(--bg);box-shadow:var(--glow-green)}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(0,255,135,.3)}
 .btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
 .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
-.btn-icon{padding:8px;font-size:1.1rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text);transition:all .2s}.btn-icon:hover{border-color:var(--neon);color:var(--neon)}
+.btn-icon{padding:8px;font-size:1.1rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text);transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.btn-icon:hover{border-color:var(--neon);color:var(--neon)}
 .btn-sm{padding:6px 10px;font-size:.8rem}
 .btn-cal{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid rgba(0,212,255,.3)}.btn-cal:hover{background:rgba(0,212,255,.2);border-color:var(--cyan)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 20px}
@@ -39,6 +39,9 @@ a{color:var(--cyan);text-decoration:none}
 .cal-upcoming{display:flex;gap:8px;overflow-x:auto;flex:1;padding:4px 0}
 .cal-event-chip{background:var(--bg3);border:1px solid rgba(0,212,255,.2);border-radius:20px;padding:4px 12px;font-size:.75rem;white-space:nowrap;color:var(--cyan);display:flex;align-items:center;gap:4px;flex-shrink:0}
 .cal-event-chip .time{color:var(--text2);font-family:'JetBrains Mono',monospace}
+.sync-indicator{font-size:.75rem;font-family:'JetBrains Mono',monospace;padding:3px 8px;border-radius:10px;display:inline-flex;align-items:center;gap:4px}
+.sync-indicator.synced{color:var(--neon);background:rgba(0,255,135,.08)}.sync-indicator.syncing{color:var(--warning);background:rgba(255,165,2,.08)}
+.sync-indicator.error{color:var(--danger);background:rgba(255,71,87,.08)}
 .filters{display:flex;gap:6px;padding:0 20px 12px;overflow-x:auto}
 .filter-tab{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);transition:all .2s;white-space:nowrap}
 .filter-tab.active,.filter-tab:hover{border-color:var(--neon);color:var(--neon);background:rgba(0,255,135,.06)}
@@ -71,13 +74,10 @@ a{color:var(--cyan);text-decoration:none}
 .activity-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
 .activity-icon.call{background:rgba(0,255,135,.12);color:var(--neon)}.activity-icon.email{background:rgba(0,212,255,.12);color:var(--cyan)}.activity-icon.meeting{background:rgba(168,85,247,.12);color:var(--purple)}.activity-icon.note{background:rgba(255,165,2,.12);color:var(--warning)}
 .activity-desc{font-size:.83rem;line-height:1.4}.activity-time{font-size:.7rem;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-top:2px}
-.cal-event-item{background:var(--bg3);border:1px solid rgba(0,212,255,.15);border-radius:var(--radius-sm);padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.cal-event-item .cal-icon{width:32px;height:32px;border-radius:50%;background:rgba(0,212,255,.12);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
-.cal-event-item .cal-info{flex:1}.cal-event-item .cal-title{font-weight:600;font-size:.85rem}.cal-event-item .cal-time{font-size:.75rem;color:var(--text2);font-family:'JetBrains Mono',monospace}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .25s}.modal-overlay.show{opacity:1;visibility:visible}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform .25s;box-shadow:var(--shadow)}.modal-overlay.show .modal{transform:translateY(0)}
-.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
-.modal-title{font-weight:700;font-size:1.05rem}.modal-close{background:none;border:none;color:var(--text2);font-size:1.3rem;cursor:pointer;padding:4px}.modal-close:hover{color:var(--text)}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform .25s;box-shadow:0 8px 40px rgba(0,0,0,.5)}.modal-overlay.show .modal{transform:translateY(0)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}.modal-title{font-weight:700;font-size:1.05rem}
+.modal-close{background:none;border:none;color:var(--text2);font-size:1.3rem;cursor:pointer}.modal-close:hover{color:var(--text)}
 .modal-body{padding:20px}.form-group{margin-bottom:14px}
 .form-label{display:block;font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}.form-label .req{color:var(--danger)}
 .form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-size:.9rem;transition:border-color .2s}
@@ -101,7 +101,8 @@ a{color:var(--cyan);text-decoration:none}
   <div class="logo">Lead<span>Forge</span></div>
   <div class="header-spacer"></div>
   <select class="company-select" id="companySelect" onchange="switchCompany(this.value)"></select>
-  <a class="btn-icon" href="calendar.html" title="Full Calendar" style="text-decoration:none">📅</a>
+  <span class="sync-indicator syncing" id="syncStatus">⏳ loading</span>
+  <a class="btn-icon" href="calendar.html" title="Full Calendar">📅</a>
   <button class="btn-icon" onclick="openSettings()" title="Settings">⚙️</button>
   <button class="btn btn-primary" onclick="openAddLead()">+ Lead</button>
 </div>
@@ -130,163 +131,248 @@ a{color:var(--cyan);text-decoration:none}
   </div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('leadModal')">Cancel</button><button class="btn btn-primary" onclick="saveLead()">Save Lead</button></div>
 </div></div>
-
 <div class="modal-overlay" id="activityModal"><div class="modal">
   <div class="modal-header"><div class="modal-title" id="activityModalTitle">Log Activity</div><button class="modal-close" onclick="closeModal('activityModal')">×</button></div>
   <div class="modal-body"><input type="hidden" id="activityType"><div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="activityDesc" placeholder="What happened?"></textarea></div></div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('activityModal')">Cancel</button><button class="btn btn-primary" onclick="saveActivity()">Save</button></div>
 </div></div>
-
 <div class="modal-overlay" id="referralModal"><div class="modal">
   <div class="modal-header"><div class="modal-title">Add Referral</div><button class="modal-close" onclick="closeModal('referralModal')">×</button></div>
   <div class="modal-body">
     <div class="form-group"><label class="form-label">Name <span class="req">*</span></label><input class="form-input" id="refName" placeholder="Full name"></div>
-    <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="refCompany" placeholder="Company name"></div>
+    <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="refCompany"></div>
     <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="refPhone" type="tel"></div>
     <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="refEmail" type="email"></div>
     <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="refNotes"></textarea></div>
   </div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('referralModal')">Cancel</button><button class="btn btn-primary" onclick="saveReferral()">Save Referral</button></div>
 </div></div>
-
 <div class="modal-overlay" id="settingsModal"><div class="modal">
   <div class="modal-header"><div class="modal-title">⚙️ Company Settings</div><button class="modal-close" onclick="closeModal('settingsModal')">×</button></div>
   <div class="modal-body" id="settingsBody"></div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('settingsModal')">Close</button></div>
 </div></div>
-
 <div class="modal-overlay" id="addCompanyModal"><div class="modal">
   <div class="modal-header"><div class="modal-title">Add Company</div><button class="modal-close" onclick="closeModal('addCompanyModal')">×</button></div>
   <div class="modal-body"><div class="form-group"><label class="form-label">Company Name <span class="req">*</span></label><input class="form-input" id="newCompanyName" placeholder="Enter company name"></div></div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('addCompanyModal')">Cancel</button><button class="btn btn-primary" onclick="addCompany()">Add Company</button></div>
 </div></div>
-
 <div class="modal-overlay" id="appointmentModal"><div class="modal">
   <div class="modal-header"><div class="modal-title">📅 Schedule Appointment</div><button class="modal-close" onclick="closeModal('appointmentModal')">×</button></div>
   <div class="modal-body">
-    <div class="form-group"><label class="form-label">Title <span class="req">*</span></label><input class="form-input" id="apptTitle" placeholder="Meeting with..."></div>
+    <div class="form-group"><label class="form-label">Title <span class="req">*</span></label><input class="form-input" id="apptTitle"></div>
     <div class="form-group"><label class="form-label">Date <span class="req">*</span></label><input class="form-input" id="apptDate" type="date"></div>
-    <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div><label class="form-label">Start <span class="req">*</span></label><input class="form-input" id="apptStart" type="time" value="09:00"></div>
-      <div><label class="form-label">End <span class="req">*</span></label><input class="form-input" id="apptEnd" type="time" value="10:00"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="apptDesc" placeholder="Meeting details..."></textarea></div>
-    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="apptLocation" placeholder="Office, Zoom, etc."></div>
+    <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label class="form-label">Start <span class="req">*</span></label><input class="form-input" id="apptStart" type="time" value="09:00"></div><div><label class="form-label">End <span class="req">*</span></label><input class="form-input" id="apptEnd" type="time" value="10:00"></div></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="apptDesc"></textarea></div>
+    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="apptLocation"></div>
   </div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('appointmentModal')">Cancel</button><button class="btn btn-primary" id="apptSaveBtn" onclick="createCalendarEvent()">📅 Create in Google Calendar</button></div>
 </div></div>
 
-<div class="modal-overlay" id="calendarViewModal"><div class="modal" style="max-width:560px">
-  <div class="modal-header"><div class="modal-title">📅 Upcoming Events</div><button class="modal-close" onclick="closeModal('calendarViewModal')">×</button></div>
-  <div class="modal-body" id="calendarViewBody"><div style="text-align:center;color:var(--text2);padding:20px">Loading...</div></div>
-  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('calendarViewModal')">Close</button><button class="btn btn-cal" onclick="fetchCalendarEvents()">🔄 Refresh</button></div>
-</div></div>
-
 <script>
-// ── GOOGLE CALENDAR ──
+// ── CONFIG ──
 const GCAL_CLIENT_ID='842996070751-qnigld1n1t8stribv4lrhks1hs8b1i88.apps.googleusercontent.com';
-const GCAL_SCOPES='https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly';
+const GCAL_SCOPES='https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/spreadsheets';
 const GCAL_API='https://www.googleapis.com/calendar/v3';
-let gcalToken=null, gcalTokenClient=null, gcalEvents=[];
+const SHEET_ID='1fnwCtF6ykGoZ6GP4V7ujlmxZXDMcElzWor1t5MB7PGk';
+const SHEETS_API='https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID;
 
+let gcalToken=null,gcalTokenClient=null,gcalEvents=[];
+let syncTimeout=null;
+
+// ── GOOGLE SHEETS SYNC ──
+async function sheetsFetch(url,opts={}){
+  if(!gcalToken)return null;
+  const r=await fetch(url,{...opts,headers:{'Authorization':'Bearer '+gcalToken,'Content-Type':'application/json',...(opts.headers||{})}});
+  if(r.status===401){gcalToken=null;sessionStorage.removeItem('gcal_token');updateCalStatus(false,'Session expired');return null}
+  if(!r.ok){console.error('Sheets API error:',r.status,await r.text());return null}
+  return r.json();
+}
+
+function setSyncStatus(status,text){
+  const el=document.getElementById('syncStatus');
+  el.className='sync-indicator '+status;
+  el.textContent=(status==='synced'?'✅ ':'⏳ ')+text;
+}
+
+async function syncToSheets(){
+  if(!gcalToken)return;
+  clearTimeout(syncTimeout);
+  syncTimeout=setTimeout(async()=>{
+    setSyncStatus('syncing','syncing...');
+    try{
+      // Build Companies sheet
+      const compRows=[['id','name']];
+      state.companies.forEach(c=>compRows.push([c.id,c.name]));
+
+      // Build Leads sheet
+      const leadRows=[['id','name','company','phone','email','status','followupDate','notes','referredBy','createdAt','companyId']];
+      state.companies.forEach(c=>{
+        c.leads.forEach(l=>{
+          leadRows.push([l.id,l.name||'',l.company||'',l.phone||'',l.email||'',l.status||'New',l.followupDate||'',l.notes||'',l.referredBy||'',l.createdAt||'',c.id]);
+        });
+      });
+
+      // Build Activities sheet
+      const actRows=[['leadId','type','description','timestamp','calendarEventId']];
+      state.companies.forEach(c=>{
+        c.leads.forEach(l=>{
+          (l.activities||[]).forEach(a=>{
+            actRows.push([l.id,a.type||'',a.description||'',a.timestamp||'',a.calendarEventId||'']);
+          });
+        });
+      });
+
+      // Batch update all 3 sheets
+      await sheetsFetch(SHEETS_API+'/values:batchUpdate',{
+        method:'POST',
+        body:JSON.stringify({
+          valueInputOption:'RAW',
+          data:[
+            {range:'Companies!A:B',values:compRows},
+            {range:'Leads!A:K',values:leadRows},
+            {range:'Activities!A:E',values:actRows}
+          ]
+        })
+      });
+
+      // Clear extra rows that might be left over
+      await sheetsFetch(SHEETS_API+'/values/Companies!A'+(compRows.length+1)+':B1000:clear',{method:'POST',body:'{}'});
+      await sheetsFetch(SHEETS_API+'/values/Leads!A'+(leadRows.length+1)+':K10000:clear',{method:'POST',body:'{}'});
+      await sheetsFetch(SHEETS_API+'/values/Activities!A'+(actRows.length+1)+':E50000:clear',{method:'POST',body:'{}'});
+
+      setSyncStatus('synced','synced');
+    }catch(e){
+      console.error('Sync error:',e);
+      setSyncStatus('error','sync failed');
+    }
+  },500);
+}
+
+async function loadFromSheets(){
+  if(!gcalToken)return false;
+  setSyncStatus('syncing','loading...');
+  try{
+    const data=await sheetsFetch(SHEETS_API+'/values:batchGet?ranges=Companies!A:B&ranges=Leads!A:K&ranges=Activities!A:E');
+    if(!data||!data.valueRanges)return false;
+
+    const compSheet=data.valueRanges[0]?.values||[];
+    const leadSheet=data.valueRanges[1]?.values||[];
+    const actSheet=data.valueRanges[2]?.values||[];
+
+    // Parse companies (skip header)
+    if(compSheet.length<=1)return false; // Empty sheet, use defaults
+
+    const companies=[];
+    for(let i=1;i<compSheet.length;i++){
+      const r=compSheet[i];
+      if(r[0])companies.push({id:r[0],name:r[1]||'',leads:[]});
+    }
+    if(!companies.length)return false;
+
+    // Parse leads (skip header)
+    for(let i=1;i<leadSheet.length;i++){
+      const r=leadSheet[i];
+      if(!r[0])continue;
+      const lead={id:r[0],name:r[1]||'',company:r[2]||'',phone:r[3]||'',email:r[4]||'',status:r[5]||'New',followupDate:r[6]||'',notes:r[7]||'',referredBy:r[8]||null,createdAt:r[9]||'',activities:[]};
+      const compId=r[10]||'';
+      const comp=companies.find(c=>c.id===compId);
+      if(comp)comp.leads.push(lead);
+    }
+
+    // Parse activities (skip header)
+    for(let i=1;i<actSheet.length;i++){
+      const r=actSheet[i];
+      if(!r[0])continue;
+      const act={type:r[1]||'',description:r[2]||'',timestamp:r[3]||'',calendarEventId:r[4]||''};
+      // Find the lead across all companies
+      for(const c of companies){
+        const lead=c.leads.find(l=>l.id===r[0]);
+        if(lead){lead.activities.push(act);break}
+      }
+    }
+
+    state.companies=companies;
+    if(!state.currentCompanyId||!companies.find(c=>c.id===state.currentCompanyId))state.currentCompanyId=companies[0].id;
+    saveLocal();
+    setSyncStatus('synced','synced');
+    return true;
+  }catch(e){
+    console.error('Load from sheets error:',e);
+    setSyncStatus('error','load failed');
+    return false;
+  }
+}
+
+// ── GOOGLE AUTH ──
 function initGoogleCalendar(){
-  const s=sessionStorage.getItem('gcal_token');
-  if(s){gcalToken=s;onCalConnected()}
+  gcalToken=sessionStorage.getItem('gcal_token');
+  if(gcalToken){onCalConnected()}
   const ck=setInterval(()=>{
-    if(typeof google!=='undefined'&&google.accounts&&google.accounts.oauth2){
+    if(typeof google!=='undefined'&&google.accounts?.oauth2){
       clearInterval(ck);
       gcalTokenClient=google.accounts.oauth2.initTokenClient({
         client_id:GCAL_CLIENT_ID,scope:GCAL_SCOPES,
-        callback:(r)=>{if(r.access_token){gcalToken=r.access_token;sessionStorage.setItem('gcal_token',gcalToken);onCalConnected()}},
-        error_callback:(e)=>{console.error('GCal auth:',e);updateCalStatus(false,'Auth failed')}
+        callback:async(r)=>{if(r.access_token){gcalToken=r.access_token;sessionStorage.setItem('gcal_token',gcalToken);await onCalConnected()}},
+        error_callback:(e)=>{console.error('Auth:',e);updateCalStatus(false,'Auth failed')}
       });
     }
   },300);
 }
 
 function handleCalAuth(){
-  if(gcalToken){gcalToken=null;sessionStorage.removeItem('gcal_token');gcalEvents=[];updateCalStatus(false,'Calendar disconnected');document.getElementById('calConnectBtn').textContent='Connect Google Calendar';document.getElementById('calUpcoming').innerHTML='';return}
+  if(gcalToken){gcalToken=null;sessionStorage.removeItem('gcal_token');gcalEvents=[];updateCalStatus(false,'Disconnected');document.getElementById('calConnectBtn').textContent='Connect Google Calendar';document.getElementById('calUpcoming').innerHTML='';setSyncStatus('error','offline');return}
   if(gcalTokenClient)gcalTokenClient.requestAccessToken();
-  else updateCalStatus(false,'Google API loading...');
 }
 
-function onCalConnected(){updateCalStatus(true,'Calendar connected');document.getElementById('calConnectBtn').textContent='Disconnect';fetchUpcomingEvents()}
+async function onCalConnected(){
+  updateCalStatus(true,'Connected');
+  document.getElementById('calConnectBtn').textContent='Disconnect';
+  // Load data from Sheets
+  const loaded=await loadFromSheets();
+  if(loaded){render()}
+  fetchUpcomingEvents();
+}
+
 function updateCalStatus(on,t){document.getElementById('calDot').className='dot '+(on?'connected':'disconnected');document.getElementById('calStatusText').textContent=t}
 
 async function gcalFetch(url,opts={}){
   if(!gcalToken)return null;
   const r=await fetch(url,{...opts,headers:{'Authorization':'Bearer '+gcalToken,'Content-Type':'application/json',...(opts.headers||{})}});
-  if(r.status===401){gcalToken=null;sessionStorage.removeItem('gcal_token');updateCalStatus(false,'Session expired');document.getElementById('calConnectBtn').textContent='Connect Google Calendar';return null}
+  if(r.status===401){gcalToken=null;sessionStorage.removeItem('gcal_token');updateCalStatus(false,'Session expired');return null}
   return r.json();
 }
 
 async function fetchUpcomingEvents(){
   const now=new Date().toISOString(),week=new Date(Date.now()+7*864e5).toISOString();
   const d=await gcalFetch(`${GCAL_API}/calendars/primary/events?timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(week)}&singleEvents=true&orderBy=startTime&maxResults=10`);
-  if(!d||!d.items)return;gcalEvents=d.items;renderUpcomingChips();
+  if(!d?.items)return;gcalEvents=d.items;renderUpcomingChips();
 }
 
 function renderUpcomingChips(){
   const c=document.getElementById('calUpcoming');
   if(!gcalEvents.length){c.innerHTML='<span style="font-size:.75rem;color:var(--text2)">No events this week</span>';return}
-  c.innerHTML=gcalEvents.slice(0,6).map(ev=>{
-    const s=ev.start.dateTime?new Date(ev.start.dateTime):new Date(ev.start.date);
-    const t=ev.start.dateTime?s.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}):'All day';
-    const dd=s.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-    return `<div class="cal-event-chip"><span class="time">${dd} ${t}</span> ${esc((ev.summary||'Event').substring(0,25))}</div>`;
-  }).join('');
+  c.innerHTML=gcalEvents.slice(0,6).map(ev=>{const s=ev.start.dateTime?new Date(ev.start.dateTime):new Date(ev.start.date);const t=ev.start.dateTime?s.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}):'All day';const dd=s.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});return`<div class="cal-event-chip"><span class="time">${dd} ${t}</span> ${esc((ev.summary||'Event').substring(0,25))}</div>`}).join('');
 }
-
-async function fetchCalendarEvents(){
-  if(!gcalToken){alert('Connect Google Calendar first');return}
-  const b=document.getElementById('calendarViewBody');
-  b.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px" class="syncing">Loading...</div>';
-  const now=new Date().toISOString(),mo=new Date(Date.now()+30*864e5).toISOString();
-  const d=await gcalFetch(`${GCAL_API}/calendars/primary/events?timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(mo)}&singleEvents=true&orderBy=startTime&maxResults=30`);
-  if(!d||!d.items){b.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px">Could not load</div>';return}
-  if(!d.items.length){b.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px">No events next 30 days</div>';return}
-  b.innerHTML=d.items.map(ev=>{
-    const s=ev.start.dateTime?new Date(ev.start.dateTime):new Date(ev.start.date);
-    const e=ev.end&&ev.end.dateTime?new Date(ev.end.dateTime):null;
-    const t=ev.start.dateTime?s.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})+(e?' — '+e.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}):''):'All day';
-    const dd=s.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-    return `<div class="cal-event-item"><div class="cal-icon">📅</div><div class="cal-info"><div class="cal-title">${esc(ev.summary||'No title')}</div><div class="cal-time">${dd} · ${t}</div>${ev.location?`<div style="font-size:.75rem;color:var(--text2);margin-top:2px">📍 ${esc(ev.location)}</div>`:''}</div></div>`;
-  }).join('');
-}
-
-function openCalendarPanel(){if(!gcalToken){handleCalAuth();return}openModal('calendarViewModal');fetchCalendarEvents()}
 
 function openScheduleAppointment(){
-  if(!gcalToken){alert('Connect Google Calendar first (📅 in header)');return}
-  const lead=selectedLead();if(!lead)return;
-  const cn=currentCompany()?.name||'';
+  if(!gcalToken){alert('Connect Google Calendar first');return}
+  const lead=selectedLead();if(!lead)return;const cn=currentCompany()?.name||'';
   document.getElementById('apptTitle').value=`Meeting with ${lead.name}${lead.company?' ('+lead.company+')':''} — ${cn}`;
   document.getElementById('apptDate').value=lead.followupDate||new Date(Date.now()+864e5).toISOString().split('T')[0];
   document.getElementById('apptStart').value='09:00';document.getElementById('apptEnd').value='10:00';
   document.getElementById('apptDesc').value=`Lead: ${lead.name}\nCompany: ${lead.company||'—'}\nPhone: ${lead.phone||'—'}\nEmail: ${lead.email||'—'}\nStatus: ${lead.status}\n\nNotes: ${lead.notes||'—'}`;
-  document.getElementById('apptLocation').value='';
-  openModal('appointmentModal');
+  document.getElementById('apptLocation').value='';openModal('appointmentModal');
 }
 
 async function createCalendarEvent(){
-  if(!gcalToken){alert('Not connected');return}
-  const title=document.getElementById('apptTitle').value.trim(),date=document.getElementById('apptDate').value,st=document.getElementById('apptStart').value,et=document.getElementById('apptEnd').value;
-  if(!title||!date||!st||!et){alert('Fill in all required fields');return}
+  if(!gcalToken)return;const title=document.getElementById('apptTitle').value.trim(),date=document.getElementById('apptDate').value,st=document.getElementById('apptStart').value,et=document.getElementById('apptEnd').value;
+  if(!title||!date||!st||!et){alert('Fill in all fields');return}
   const btn=document.getElementById('apptSaveBtn');btn.textContent='⏳ Creating...';btn.disabled=true;
   const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  try{
-    const data=await gcalFetch(`${GCAL_API}/calendars/primary/events`,{method:'POST',body:JSON.stringify({
-      summary:title,description:document.getElementById('apptDesc').value.trim(),location:document.getElementById('apptLocation').value.trim(),
-      start:{dateTime:`${date}T${st}:00`,timeZone:tz},end:{dateTime:`${date}T${et}:00`,timeZone:tz},
-      reminders:{useDefault:false,overrides:[{method:'popup',minutes:30},{method:'popup',minutes:10}]}
-    })});
-    if(data&&data.id){
-      const lead=selectedLead();
-      if(lead){if(!lead.activities)lead.activities=[];lead.activities.push({type:'Meeting',description:`📅 Scheduled: ${title} on ${formatDate(date)} at ${st}`,timestamp:new Date().toISOString(),calendarEventId:data.id});if(lead.status==='New')lead.status='Contacted';saveData()}
-      closeModal('appointmentModal');fetchUpcomingEvents();render();if(lead)selectLead(lead.id);
-      alert('✅ Appointment created in Google Calendar!');
-    }else{alert('Failed to create event')}
-  }catch(err){console.error(err);alert('Error: '+err.message)}
+  try{const data=await gcalFetch(`${GCAL_API}/calendars/primary/events`,{method:'POST',body:JSON.stringify({summary:title,description:document.getElementById('apptDesc').value.trim(),location:document.getElementById('apptLocation').value.trim(),start:{dateTime:`${date}T${st}:00`,timeZone:tz},end:{dateTime:`${date}T${et}:00`,timeZone:tz},reminders:{useDefault:true}})});
+    if(data?.id){const lead=selectedLead();if(lead){if(!lead.activities)lead.activities=[];lead.activities.push({type:'Meeting',description:`📅 Scheduled: ${title} on ${formatDate(date)} at ${st}`,timestamp:new Date().toISOString(),calendarEventId:data.id});if(lead.status==='New')lead.status='Contacted';saveData()}closeModal('appointmentModal');fetchUpcomingEvents();render();if(lead)selectLead(lead.id);alert('✅ Created!')}
+  }catch(e){alert('Error: '+e.message)}
   btn.textContent='📅 Create in Google Calendar';btn.disabled=false;
 }
 
@@ -294,14 +380,21 @@ async function createCalendarEvent(){
 const DEFAULT_COMPANIES=[{id:'c1',name:'T&T Design',leads:[]},{id:'c2',name:'OVB',leads:[]}];
 let state={companies:[],currentCompanyId:null,selectedLeadId:null,currentFilter:'All'};
 function generateId(){return 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)}
-function loadData(){
+
+function loadLocal(){
   const saved=localStorage.getItem('leadforge_data');
-  if(saved){try{state={...state,...JSON.parse(saved)}}catch(e){initDefaults()}}
-  else{const old=localStorage.getItem('leads');if(old){try{const p=JSON.parse(old);const c=JSON.parse(JSON.stringify(DEFAULT_COMPANIES));c[0].leads=Array.isArray(p)?p:[];state.companies=c;state.currentCompanyId=c[0].id;localStorage.removeItem('leads')}catch(e){initDefaults()}}else initDefaults()}
-  if(!state.companies.length)initDefaults();if(!state.currentCompanyId||!state.companies.find(c=>c.id===state.currentCompanyId))state.currentCompanyId=state.companies[0].id;
+  if(saved){try{const d=JSON.parse(saved);state.companies=d.companies||[];state.currentCompanyId=d.currentCompanyId}catch(e){}}
+  if(!state.companies.length){state.companies=JSON.parse(JSON.stringify(DEFAULT_COMPANIES));state.currentCompanyId=state.companies[0].id}
+  if(!state.currentCompanyId||!state.companies.find(c=>c.id===state.currentCompanyId))state.currentCompanyId=state.companies[0].id;
 }
-function initDefaults(){state.companies=JSON.parse(JSON.stringify(DEFAULT_COMPANIES));state.currentCompanyId=state.companies[0].id}
-function saveData(){localStorage.setItem('leadforge_data',JSON.stringify({companies:state.companies,currentCompanyId:state.currentCompanyId}))}
+
+function saveLocal(){localStorage.setItem('leadforge_data',JSON.stringify({companies:state.companies,currentCompanyId:state.currentCompanyId}))}
+
+function saveData(){
+  saveLocal();
+  syncToSheets();
+}
+
 function currentCompany(){return state.companies.find(c=>c.id===state.currentCompanyId)}
 function currentLeads(){return currentCompany()?.leads||[]}
 function selectedLead(){return currentLeads().find(l=>l.id===state.selectedLeadId)}
@@ -348,7 +441,7 @@ function renderDetail(){
 }
 
 // ── ACTIONS ──
-function switchCompany(id){state.currentCompanyId=id;state.selectedLeadId=null;state.currentFilter='All';saveData();render()}
+function switchCompany(id){state.currentCompanyId=id;state.selectedLeadId=null;state.currentFilter='All';saveLocal();render()}
 function selectLead(id){state.selectedLeadId=id;renderLeadList();renderDetail();document.getElementById('mainLayout').classList.add('show-detail');document.getElementById('detailPanel').scrollTop=0}
 function deselectLead(){state.selectedLeadId=null;document.getElementById('mainLayout').classList.remove('show-detail');renderLeadList();renderDetail()}
 function openAddLead(){document.getElementById('leadModalTitle').textContent='Add Lead';document.getElementById('editLeadId').value='';document.getElementById('leadName').value='';document.getElementById('leadCompany').value='';document.getElementById('leadPhone').value='';document.getElementById('leadEmail').value='';document.getElementById('leadStatus').value='New';document.getElementById('leadFollowup').value='';document.getElementById('leadNotes').value='';openModal('leadModal')}
@@ -388,7 +481,7 @@ function findLeadById(id){return currentLeads().find(l=>l.id===id)}
 
 // ── SETTINGS ──
 function openSettings(){
-  document.getElementById('settingsBody').innerHTML=`<div style="margin-bottom:16px">${state.companies.map(c=>`<div class="company-list-item"><div><div class="name">${esc(c.name)}</div><div class="count">${c.leads.length} leads</div></div><div class="actions"><button class="btn btn-secondary btn-sm" onclick="exportCompany('${c.id}')">📥 Export</button>${state.companies.length>1?`<button class="btn btn-danger btn-sm" onclick="deleteCompany('${c.id}')">🗑️</button>`:''}</div></div>`).join('')}</div><button class="btn btn-primary" onclick="closeModal('settingsModal');openModal('addCompanyModal')">+ Add Company</button>`;
+  document.getElementById('settingsBody').innerHTML=`<div style="margin-bottom:16px">${state.companies.map(c=>`<div class="company-list-item"><div><div class="name">${esc(c.name)}</div><div class="count">${c.leads.length} leads</div></div><div class="actions"><button class="btn btn-secondary btn-sm" onclick="exportCompany('${c.id}')">📥 Export</button>${state.companies.length>1?`<button class="btn btn-danger btn-sm" onclick="deleteCompany('${c.id}')">🗑️</button>`:''}</div></div>`).join('')}</div><button class="btn btn-primary" onclick="closeModal('settingsModal');openModal('addCompanyModal')">+ Add Company</button><button class="btn btn-cal btn-sm" style="margin-left:8px" onclick="forceSync()">🔄 Force Sync</button>`;
   openModal('settingsModal');
 }
 function addCompany(){const n=document.getElementById('newCompanyName').value.trim();if(!n){document.getElementById('newCompanyName').style.borderColor='var(--danger)';return}state.companies.push({id:generateId(),name:n,leads:[]});saveData();closeModal('addCompanyModal');render();openSettings()}
@@ -406,6 +499,11 @@ function exportCompanyData(c){
   XLSX.writeFile(wb,`${c.name.replace(/[^a-zA-Z0-9&]/g,'_')}_Leads_${new Date().toISOString().split('T')[0].replace(/-/g,'')}.xlsx`);
 }
 
+async function forceSync(){
+  if(!gcalToken){alert('Connect first');return}
+  const loaded=await loadFromSheets();if(loaded)render();
+}
+
 // ── MODALS ──
 function openModal(id){document.getElementById(id).classList.add('show')}
 function closeModal(id){document.getElementById(id).classList.remove('show')}
@@ -420,7 +518,7 @@ function timeAgo(ts){if(!ts)return'';const d=Date.now()-new Date(ts).getTime(),m
 document.querySelectorAll('.form-input,.form-textarea').forEach(el=>{el.addEventListener('focus',()=>el.style.borderColor='')});
 
 // ── INIT ──
-loadData();render();initGoogleCalendar();
+loadLocal();render();initGoogleCalendar();
 </script>
 </body>
 </html>
