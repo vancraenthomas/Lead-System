@@ -6,911 +6,421 @@
 <title>LeadForge — Multi-Company Lead Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0a0e14;--bg2:#0d1117;--bg3:#141b24;--bg4:#1a232e;
-  --neon:#00ff87;--cyan:#00d4ff;--text:#c5d0dc;--text2:#8899aa;
-  --border:#1e2a38;--danger:#ff4757;--warning:#ffa502;--purple:#a855f7;
-  --card:#0f1620;--card-hover:#141e2a;
-  --radius:10px;--radius-sm:6px;
-  --shadow:0 4px 24px rgba(0,0,0,.4);
-  --glow-green:0 0 20px rgba(0,255,135,.15);
-  --glow-cyan:0 0 20px rgba(0,212,255,.15);
-}
+:root{--bg:#0a0e14;--bg2:#0d1117;--bg3:#141b24;--bg4:#1a232e;--neon:#00ff87;--cyan:#00d4ff;--text:#c5d0dc;--text2:#8899aa;--border:#1e2a38;--danger:#ff4757;--warning:#ffa502;--purple:#a855f7;--card:#0f1620;--card-hover:#141e2a;--radius:10px;--radius-sm:6px;--shadow:0 4px 24px rgba(0,0,0,.4);--glow-green:0 0 20px rgba(0,255,135,.15);--glow-cyan:0 0 20px rgba(0,212,255,.15)}
 html{font-size:15px;scroll-behavior:smooth}
 body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:
-  radial-gradient(ellipse at 20% 0%,rgba(0,255,135,.04) 0%,transparent 60%),
-  radial-gradient(ellipse at 80% 100%,rgba(0,212,255,.04) 0%,transparent 60%);
-  pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(0,255,135,.04) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(0,212,255,.04) 0%,transparent 60%);pointer-events:none;z-index:0}
 ::selection{background:var(--neon);color:var(--bg)}
 input,select,textarea,button{font-family:inherit;font-size:inherit}
 a{color:var(--cyan);text-decoration:none}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--text2)}
-
-/* Header */
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 .header{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
 .logo{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.1rem;color:var(--neon);letter-spacing:-0.5px;white-space:nowrap;text-shadow:0 0 12px rgba(0,255,135,.3)}
-.logo span{color:var(--cyan)}
-.header-spacer{flex:1}
+.logo span{color:var(--cyan)}.header-spacer{flex:1}
 .company-select{background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:.85rem;cursor:pointer;max-width:180px;transition:border-color .2s}
 .company-select:focus{outline:none;border-color:var(--neon)}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:none;border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s;white-space:nowrap}
-.btn-primary{background:var(--neon);color:var(--bg);box-shadow:var(--glow-green)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(0,255,135,.3)}
-.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
-.btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
-.btn-danger:hover{background:var(--danger);color:#fff}
-.btn-icon{padding:8px;font-size:1.1rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text);transition:all .2s}
-.btn-icon:hover{border-color:var(--neon);color:var(--neon)}
+.btn-primary{background:var(--neon);color:var(--bg);box-shadow:var(--glow-green)}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(0,255,135,.3)}
+.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-icon{padding:8px;font-size:1.1rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text);transition:all .2s}.btn-icon:hover{border-color:var(--neon);color:var(--neon)}
 .btn-sm{padding:6px 10px;font-size:.8rem}
-
-/* Stats */
+.btn-cal{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid rgba(0,212,255,.3)}.btn-cal:hover{background:rgba(0,212,255,.2);border-color:var(--cyan)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 20px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:all .3s}
-.stat-card:hover{border-color:var(--neon);box-shadow:var(--glow-green)}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:all .3s}.stat-card:hover{border-color:var(--neon);box-shadow:var(--glow-green)}
 .stat-val{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--neon);line-height:1}
 .stat-label{font-size:.75rem;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
-
-/* Filter tabs */
+.cal-bar{padding:0 20px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cal-status{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--text2)}
+.cal-status .dot{width:8px;height:8px;border-radius:50%;display:inline-block}.cal-status .dot.connected{background:var(--neon);box-shadow:0 0 6px var(--neon)}.cal-status .dot.disconnected{background:var(--danger)}
+.cal-upcoming{display:flex;gap:8px;overflow-x:auto;flex:1;padding:4px 0}
+.cal-event-chip{background:var(--bg3);border:1px solid rgba(0,212,255,.2);border-radius:20px;padding:4px 12px;font-size:.75rem;white-space:nowrap;color:var(--cyan);display:flex;align-items:center;gap:4px;flex-shrink:0}
+.cal-event-chip .time{color:var(--text2);font-family:'JetBrains Mono',monospace}
 .filters{display:flex;gap:6px;padding:0 20px 12px;overflow-x:auto}
 .filter-tab{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);transition:all .2s;white-space:nowrap}
 .filter-tab.active,.filter-tab:hover{border-color:var(--neon);color:var(--neon);background:rgba(0,255,135,.06)}
-
-/* Main layout */
-.main{display:grid;grid-template-columns:380px 1fr;gap:0;min-height:calc(100vh - 180px)}
-.lead-list-panel{border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 180px)}
-.detail-panel{overflow-y:auto;max-height:calc(100vh - 180px);padding:20px}
-
-/* Lead cards */
+.main{display:grid;grid-template-columns:380px 1fr;gap:0;min-height:calc(100vh - 220px)}
+.lead-list-panel{border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 220px)}
+.detail-panel{overflow-y:auto;max-height:calc(100vh - 220px);padding:20px}
 .lead-list{padding:8px}
 .lead-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px;cursor:pointer;transition:all .2s}
 .lead-card:hover{border-color:var(--cyan);background:var(--card-hover)}
 .lead-card.active{border-color:var(--neon);box-shadow:var(--glow-green);background:rgba(0,255,135,.03)}
-.lead-name{font-weight:700;font-size:.95rem;margin-bottom:4px}
-.lead-company{font-size:.8rem;color:var(--text2);margin-bottom:8px}
-.lead-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.75rem;color:var(--text2)}
-.lead-meta-item{display:flex;align-items:center;gap:3px}
+.lead-name{font-weight:700;font-size:.95rem;margin-bottom:4px}.lead-company{font-size:.8rem;color:var(--text2);margin-bottom:8px}
+.lead-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.75rem;color:var(--text2)}.lead-meta-item{display:flex;align-items:center;gap:3px}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 .badge-new{background:rgba(0,255,135,.12);color:var(--neon);border:1px solid rgba(0,255,135,.3)}
 .badge-contacted{background:rgba(0,212,255,.12);color:var(--cyan);border:1px solid rgba(0,212,255,.3)}
 .badge-qualified{background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
 .badge-closed{background:rgba(255,71,87,.12);color:var(--danger);border:1px solid rgba(255,71,87,.3)}
-
-/* Detail */
-.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text2);text-align:center;padding:40px}
-.detail-empty .icon{font-size:3rem;margin-bottom:12px;opacity:.3}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text2);text-align:center;padding:40px}.detail-empty .icon{font-size:3rem;margin-bottom:12px;opacity:.3}
 .detail-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px}
 .detail-name{font-size:1.5rem;font-weight:800;letter-spacing:-.5px}
 .detail-section{margin-bottom:24px}
 .detail-section-title{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.contact-item{background:var(--bg3);border-radius:var(--radius-sm);padding:10px}
-.contact-label{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.contact-value{font-size:.85rem;word-break:break-all}
+.contact-item{background:var(--bg3);border-radius:var(--radius-sm);padding:10px}.contact-label{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}.contact-value{font-size:.85rem;word-break:break-all}
 .notes-box{background:var(--bg3);border-radius:var(--radius-sm);padding:12px;font-size:.85rem;line-height:1.5;white-space:pre-wrap;min-height:40px;color:var(--text)}
-.actions-grid{display:flex;flex-wrap:wrap;gap:8px}
-.action-btn{flex:1;min-width:120px}
-
-/* Referrals */
-.referral-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;cursor:pointer;transition:all .2s;margin-bottom:6px}
-.referral-card:hover{border-color:var(--cyan)}
-.referred-by{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:var(--radius-sm);padding:8px 12px;font-size:.83rem;margin-bottom:16px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:all .2s}
-.referred-by:hover{border-color:var(--cyan)}
-
-/* Activity */
-.activity-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-.activity-item:last-child{border:none}
+.actions-grid{display:flex;flex-wrap:wrap;gap:8px}.action-btn{flex:1;min-width:120px}
+.referral-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;cursor:pointer;transition:all .2s;margin-bottom:6px}.referral-card:hover{border-color:var(--cyan)}
+.referred-by{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:var(--radius-sm);padding:8px 12px;font-size:.83rem;margin-bottom:16px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:all .2s}.referred-by:hover{border-color:var(--cyan)}
+.activity-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}.activity-item:last-child{border:none}
 .activity-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
-.activity-icon.call{background:rgba(0,255,135,.12);color:var(--neon)}
-.activity-icon.email{background:rgba(0,212,255,.12);color:var(--cyan)}
-.activity-icon.meeting{background:rgba(168,85,247,.12);color:var(--purple)}
-.activity-icon.note{background:rgba(255,165,2,.12);color:var(--warning)}
-.activity-desc{font-size:.83rem;line-height:1.4}
-.activity-time{font-size:.7rem;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-top:2px}
-
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .25s}
-.modal-overlay.show{opacity:1;visibility:visible}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform .25s;box-shadow:var(--shadow)}
-.modal-overlay.show .modal{transform:translateY(0)}
+.activity-icon.call{background:rgba(0,255,135,.12);color:var(--neon)}.activity-icon.email{background:rgba(0,212,255,.12);color:var(--cyan)}.activity-icon.meeting{background:rgba(168,85,247,.12);color:var(--purple)}.activity-icon.note{background:rgba(255,165,2,.12);color:var(--warning)}
+.activity-desc{font-size:.83rem;line-height:1.4}.activity-time{font-size:.7rem;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-top:2px}
+.cal-event-item{background:var(--bg3);border:1px solid rgba(0,212,255,.15);border-radius:var(--radius-sm);padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.cal-event-item .cal-icon{width:32px;height:32px;border-radius:50%;background:rgba(0,212,255,.12);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.cal-event-item .cal-info{flex:1}.cal-event-item .cal-title{font-weight:600;font-size:.85rem}.cal-event-item .cal-time{font-size:.75rem;color:var(--text2);font-family:'JetBrains Mono',monospace}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .25s}.modal-overlay.show{opacity:1;visibility:visible}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform .25s;box-shadow:var(--shadow)}.modal-overlay.show .modal{transform:translateY(0)}
 .modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
-.modal-title{font-weight:700;font-size:1.05rem}
-.modal-close{background:none;border:none;color:var(--text2);font-size:1.3rem;cursor:pointer;padding:4px}
-.modal-close:hover{color:var(--text)}
-.modal-body{padding:20px}
-.form-group{margin-bottom:14px}
-.form-label{display:block;font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
-.form-label .req{color:var(--danger)}
+.modal-title{font-weight:700;font-size:1.05rem}.modal-close{background:none;border:none;color:var(--text2);font-size:1.3rem;cursor:pointer;padding:4px}.modal-close:hover{color:var(--text)}
+.modal-body{padding:20px}.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}.form-label .req{color:var(--danger)}
 .form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-size:.9rem;transition:border-color .2s}
 .form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--neon)}
 .form-textarea{resize:vertical;min-height:70px}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;padding:16px 20px;border-top:1px solid var(--border)}
-
-/* Settings */
 .company-list-item{display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg3);border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid var(--border)}
-.company-list-item .name{font-weight:600}
-.company-list-item .count{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text2)}
-.company-list-item .actions{display:flex;gap:6px}
-
-/* Empty state */
-.empty-state{text-align:center;padding:60px 20px;color:var(--text2)}
-.empty-state .icon{font-size:3rem;margin-bottom:12px;opacity:.3}
-.empty-state p{font-size:.9rem;margin-bottom:16px}
-
-/* Status dropdown in detail */
-.status-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 8px;color:var(--text);font-size:.8rem;cursor:pointer}
-.status-select:focus{outline:none;border-color:var(--neon)}
-
-/* Transfer section */
-.transfer-section{display:flex;gap:8px;align-items:center}
-.transfer-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;color:var(--text);font-size:.85rem;flex:1}
-
-/* Responsive */
-@media(max-width:800px){
-  .main{grid-template-columns:1fr;min-height:auto}
-  .lead-list-panel{max-height:none;border-right:none;border-bottom:1px solid var(--border)}
-  .detail-panel{max-height:none;display:none}
-  .stats{grid-template-columns:repeat(2,1fr);gap:8px;padding:12px}
-  .header{flex-wrap:wrap;gap:8px;padding:10px 12px}
-  .logo{font-size:.95rem}
-  .company-select{max-width:140px;font-size:.8rem;padding:6px 8px}
-  .contact-grid{grid-template-columns:1fr}
-  .stat-val{font-size:1.4rem}
-  .main.show-detail .detail-panel{display:block}
-  .main.show-detail .lead-list-panel{display:none}
-  .back-btn-mobile{display:inline-flex !important}
-}
-@media(min-width:801px){
-  .back-btn-mobile{display:none !important}
-}
-
-/* Animations */
+.company-list-item .name{font-weight:600}.company-list-item .count{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text2)}.company-list-item .actions{display:flex;gap:6px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text2)}.empty-state .icon{font-size:3rem;margin-bottom:12px;opacity:.3}.empty-state p{font-size:.9rem;margin-bottom:16px}
+.status-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 8px;color:var(--text);font-size:.8rem;cursor:pointer}.status-select:focus{outline:none;border-color:var(--neon)}
+.transfer-section{display:flex;gap:8px;align-items:center}.transfer-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;color:var(--text);font-size:.85rem;flex:1}
+@media(max-width:800px){.main{grid-template-columns:1fr;min-height:auto}.lead-list-panel{max-height:none;border-right:none;border-bottom:1px solid var(--border)}.detail-panel{max-height:none;display:none}.stats{grid-template-columns:repeat(2,1fr);gap:8px;padding:12px}.header{flex-wrap:wrap;gap:8px;padding:10px 12px}.logo{font-size:.95rem}.company-select{max-width:140px;font-size:.8rem;padding:6px 8px}.contact-grid{grid-template-columns:1fr}.stat-val{font-size:1.4rem}.main.show-detail .detail-panel{display:block}.main.show-detail .lead-list-panel{display:none}.back-btn-mobile{display:inline-flex !important}}
+@media(min-width:801px){.back-btn-mobile{display:none !important}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.lead-card{animation:fadeIn .3s ease both}
-.lead-card:nth-child(2){animation-delay:.03s}
-.lead-card:nth-child(3){animation-delay:.06s}
-.lead-card:nth-child(4){animation-delay:.09s}
-.lead-card:nth-child(5){animation-delay:.12s}
+.lead-card{animation:fadeIn .3s ease both}.lead-card:nth-child(2){animation-delay:.03s}.lead-card:nth-child(3){animation-delay:.06s}.lead-card:nth-child(4){animation-delay:.09s}.lead-card:nth-child(5){animation-delay:.12s}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}.syncing{animation:pulse 1s ease infinite}
 </style>
 </head>
 <body>
-
-<!-- Header -->
 <div class="header">
   <div class="logo">Lead<span>Forge</span></div>
   <div class="header-spacer"></div>
   <select class="company-select" id="companySelect" onchange="switchCompany(this.value)"></select>
+  <button class="btn-icon" onclick="openCalendarPanel()" title="Calendar">📅</button>
   <button class="btn-icon" onclick="openSettings()" title="Settings">⚙️</button>
   <button class="btn btn-primary" onclick="openAddLead()">+ Lead</button>
 </div>
-
-<!-- Stats -->
+<div class="cal-bar" id="calBar">
+  <div class="cal-status"><span class="dot disconnected" id="calDot"></span><span id="calStatusText">Calendar disconnected</span></div>
+  <button class="btn btn-cal btn-sm" id="calConnectBtn" onclick="handleCalAuth()">Connect Google Calendar</button>
+  <div class="cal-upcoming" id="calUpcoming"></div>
+</div>
 <div class="stats" id="statsBar"></div>
-
-<!-- Filters -->
 <div class="filters" id="filterTabs"></div>
-
-<!-- Main -->
 <div class="main" id="mainLayout">
-  <div class="lead-list-panel" id="leadListPanel">
-    <div class="lead-list" id="leadList"></div>
-  </div>
-  <div class="detail-panel" id="detailPanel">
-    <div class="detail-empty">
-      <div class="icon">📋</div>
-      <p>Select a lead to view details</p>
-    </div>
-  </div>
+  <div class="lead-list-panel" id="leadListPanel"><div class="lead-list" id="leadList"></div></div>
+  <div class="detail-panel" id="detailPanel"><div class="detail-empty"><div class="icon">📋</div><p>Select a lead to view details</p></div></div>
 </div>
 
-<!-- Add/Edit Lead Modal -->
-<div class="modal-overlay" id="leadModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="leadModalTitle">Add Lead</div>
-      <button class="modal-close" onclick="closeModal('leadModal')">×</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="editLeadId">
-      <div class="form-group">
-        <label class="form-label">Name <span class="req">*</span></label>
-        <input class="form-input" id="leadName" placeholder="Full name" required>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Company</label>
-        <input class="form-input" id="leadCompany" placeholder="Company name">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Phone</label>
-        <input class="form-input" id="leadPhone" placeholder="+1 234 567 890" type="tel">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" id="leadEmail" placeholder="email@example.com" type="email">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Status</label>
-        <select class="form-select" id="leadStatus">
-          <option value="New">New</option>
-          <option value="Contacted">Contacted</option>
-          <option value="Qualified">Qualified</option>
-          <option value="Closed">Closed</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Follow-up Date</label>
-        <input class="form-input" id="leadFollowup" type="date">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Notes</label>
-        <textarea class="form-textarea" id="leadNotes" placeholder="Additional notes..."></textarea>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('leadModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveLead()">Save Lead</button>
-    </div>
+<div class="modal-overlay" id="leadModal"><div class="modal">
+  <div class="modal-header"><div class="modal-title" id="leadModalTitle">Add Lead</div><button class="modal-close" onclick="closeModal('leadModal')">×</button></div>
+  <div class="modal-body"><input type="hidden" id="editLeadId">
+    <div class="form-group"><label class="form-label">Name <span class="req">*</span></label><input class="form-input" id="leadName" placeholder="Full name"></div>
+    <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="leadCompany" placeholder="Company name"></div>
+    <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="leadPhone" placeholder="+1 234 567 890" type="tel"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="leadEmail" placeholder="email@example.com" type="email"></div>
+    <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="leadStatus"><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Closed">Closed</option></select></div>
+    <div class="form-group"><label class="form-label">Follow-up Date</label><input class="form-input" id="leadFollowup" type="date"></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="leadNotes" placeholder="Additional notes..."></textarea></div>
   </div>
-</div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('leadModal')">Cancel</button><button class="btn btn-primary" onclick="saveLead()">Save Lead</button></div>
+</div></div>
 
-<!-- Activity Modal -->
-<div class="modal-overlay" id="activityModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="activityModalTitle">Log Activity</div>
-      <button class="modal-close" onclick="closeModal('activityModal')">×</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="activityType">
-      <div class="form-group">
-        <label class="form-label">Description</label>
-        <textarea class="form-textarea" id="activityDesc" placeholder="What happened?"></textarea>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('activityModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveActivity()">Save</button>
-    </div>
-  </div>
-</div>
+<div class="modal-overlay" id="activityModal"><div class="modal">
+  <div class="modal-header"><div class="modal-title" id="activityModalTitle">Log Activity</div><button class="modal-close" onclick="closeModal('activityModal')">×</button></div>
+  <div class="modal-body"><input type="hidden" id="activityType"><div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="activityDesc" placeholder="What happened?"></textarea></div></div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('activityModal')">Cancel</button><button class="btn btn-primary" onclick="saveActivity()">Save</button></div>
+</div></div>
 
-<!-- Referral Modal -->
-<div class="modal-overlay" id="referralModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Add Referral</div>
-      <button class="modal-close" onclick="closeModal('referralModal')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Name <span class="req">*</span></label>
-        <input class="form-input" id="refName" placeholder="Full name" required>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Company</label>
-        <input class="form-input" id="refCompany" placeholder="Company name">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Phone</label>
-        <input class="form-input" id="refPhone" placeholder="+1 234 567 890" type="tel">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" id="refEmail" placeholder="email@example.com" type="email">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Notes</label>
-        <textarea class="form-textarea" id="refNotes" placeholder="Notes..."></textarea>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('referralModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveReferral()">Save Referral</button>
-    </div>
+<div class="modal-overlay" id="referralModal"><div class="modal">
+  <div class="modal-header"><div class="modal-title">Add Referral</div><button class="modal-close" onclick="closeModal('referralModal')">×</button></div>
+  <div class="modal-body">
+    <div class="form-group"><label class="form-label">Name <span class="req">*</span></label><input class="form-input" id="refName" placeholder="Full name"></div>
+    <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="refCompany" placeholder="Company name"></div>
+    <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="refPhone" type="tel"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="refEmail" type="email"></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="refNotes"></textarea></div>
   </div>
-</div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('referralModal')">Cancel</button><button class="btn btn-primary" onclick="saveReferral()">Save Referral</button></div>
+</div></div>
 
-<!-- Settings Modal -->
-<div class="modal-overlay" id="settingsModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">⚙️ Company Settings</div>
-      <button class="modal-close" onclick="closeModal('settingsModal')">×</button>
-    </div>
-    <div class="modal-body" id="settingsBody"></div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('settingsModal')">Close</button>
-    </div>
-  </div>
-</div>
+<div class="modal-overlay" id="settingsModal"><div class="modal">
+  <div class="modal-header"><div class="modal-title">⚙️ Company Settings</div><button class="modal-close" onclick="closeModal('settingsModal')">×</button></div>
+  <div class="modal-body" id="settingsBody"></div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('settingsModal')">Close</button></div>
+</div></div>
 
-<!-- Add Company Modal -->
-<div class="modal-overlay" id="addCompanyModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Add Company</div>
-      <button class="modal-close" onclick="closeModal('addCompanyModal')">×</button>
+<div class="modal-overlay" id="addCompanyModal"><div class="modal">
+  <div class="modal-header"><div class="modal-title">Add Company</div><button class="modal-close" onclick="closeModal('addCompanyModal')">×</button></div>
+  <div class="modal-body"><div class="form-group"><label class="form-label">Company Name <span class="req">*</span></label><input class="form-input" id="newCompanyName" placeholder="Enter company name"></div></div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('addCompanyModal')">Cancel</button><button class="btn btn-primary" onclick="addCompany()">Add Company</button></div>
+</div></div>
+
+<div class="modal-overlay" id="appointmentModal"><div class="modal">
+  <div class="modal-header"><div class="modal-title">📅 Schedule Appointment</div><button class="modal-close" onclick="closeModal('appointmentModal')">×</button></div>
+  <div class="modal-body">
+    <div class="form-group"><label class="form-label">Title <span class="req">*</span></label><input class="form-input" id="apptTitle" placeholder="Meeting with..."></div>
+    <div class="form-group"><label class="form-label">Date <span class="req">*</span></label><input class="form-input" id="apptDate" type="date"></div>
+    <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><label class="form-label">Start <span class="req">*</span></label><input class="form-input" id="apptStart" type="time" value="09:00"></div>
+      <div><label class="form-label">End <span class="req">*</span></label><input class="form-input" id="apptEnd" type="time" value="10:00"></div>
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Company Name <span class="req">*</span></label>
-        <input class="form-input" id="newCompanyName" placeholder="Enter company name">
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('addCompanyModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="addCompany()">Add Company</button>
-    </div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="apptDesc" placeholder="Meeting details..."></textarea></div>
+    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="apptLocation" placeholder="Office, Zoom, etc."></div>
   </div>
-</div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('appointmentModal')">Cancel</button><button class="btn btn-primary" id="apptSaveBtn" onclick="createCalendarEvent()">📅 Create in Google Calendar</button></div>
+</div></div>
+
+<div class="modal-overlay" id="calendarViewModal"><div class="modal" style="max-width:560px">
+  <div class="modal-header"><div class="modal-title">📅 Upcoming Events</div><button class="modal-close" onclick="closeModal('calendarViewModal')">×</button></div>
+  <div class="modal-body" id="calendarViewBody"><div style="text-align:center;color:var(--text2);padding:20px">Loading...</div></div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('calendarViewModal')">Close</button><button class="btn btn-cal" onclick="fetchCalendarEvents()">🔄 Refresh</button></div>
+</div></div>
 
 <script>
-// ── DATA LAYER ──
-const DEFAULT_COMPANIES = [
-  { id: 'c1', name: 'T&T Design', leads: [] },
-  { id: 'c2', name: 'OVB', leads: [] }
-];
+// ── GOOGLE CALENDAR ──
+const GCAL_CLIENT_ID='842996070751-qnigld1n1t8stribv4lrhks1hs8b1i88.apps.googleusercontent.com';
+const GCAL_SCOPES='https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly';
+const GCAL_API='https://www.googleapis.com/calendar/v3';
+let gcalToken=null, gcalTokenClient=null, gcalEvents=[];
 
-let state = { companies: [], currentCompanyId: null, selectedLeadId: null, currentFilter: 'All' };
-
-function generateId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2,6); }
-
-function loadData() {
-  const saved = localStorage.getItem('leadforge_data');
-  if (saved) {
-    try {
-      state = { ...state, ...JSON.parse(saved) };
-    } catch(e) { initDefaults(); }
-  } else {
-    // Check for old single-company data migration
-    const oldLeads = localStorage.getItem('leads');
-    if (oldLeads) {
-      try {
-        const parsed = JSON.parse(oldLeads);
-        const companies = JSON.parse(JSON.stringify(DEFAULT_COMPANIES));
-        companies[0].leads = Array.isArray(parsed) ? parsed : [];
-        state.companies = companies;
-        state.currentCompanyId = companies[0].id;
-        localStorage.removeItem('leads');
-      } catch(e) { initDefaults(); }
-    } else {
-      initDefaults();
+function initGoogleCalendar(){
+  const s=sessionStorage.getItem('gcal_token');
+  if(s){gcalToken=s;onCalConnected()}
+  const ck=setInterval(()=>{
+    if(typeof google!=='undefined'&&google.accounts&&google.accounts.oauth2){
+      clearInterval(ck);
+      gcalTokenClient=google.accounts.oauth2.initTokenClient({
+        client_id:GCAL_CLIENT_ID,scope:GCAL_SCOPES,
+        callback:(r)=>{if(r.access_token){gcalToken=r.access_token;sessionStorage.setItem('gcal_token',gcalToken);onCalConnected()}},
+        error_callback:(e)=>{console.error('GCal auth:',e);updateCalStatus(false,'Auth failed')}
+      });
     }
-  }
-  if (!state.companies.length) initDefaults();
-  if (!state.currentCompanyId || !state.companies.find(c => c.id === state.currentCompanyId)) {
-    state.currentCompanyId = state.companies[0].id;
-  }
+  },300);
 }
 
-function initDefaults() {
-  state.companies = JSON.parse(JSON.stringify(DEFAULT_COMPANIES));
-  state.currentCompanyId = state.companies[0].id;
+function handleCalAuth(){
+  if(gcalToken){gcalToken=null;sessionStorage.removeItem('gcal_token');gcalEvents=[];updateCalStatus(false,'Calendar disconnected');document.getElementById('calConnectBtn').textContent='Connect Google Calendar';document.getElementById('calUpcoming').innerHTML='';return}
+  if(gcalTokenClient)gcalTokenClient.requestAccessToken();
+  else updateCalStatus(false,'Google API loading...');
 }
 
-function saveData() {
-  localStorage.setItem('leadforge_data', JSON.stringify({
-    companies: state.companies,
-    currentCompanyId: state.currentCompanyId
-  }));
+function onCalConnected(){updateCalStatus(true,'Calendar connected');document.getElementById('calConnectBtn').textContent='Disconnect';fetchUpcomingEvents()}
+function updateCalStatus(on,t){document.getElementById('calDot').className='dot '+(on?'connected':'disconnected');document.getElementById('calStatusText').textContent=t}
+
+async function gcalFetch(url,opts={}){
+  if(!gcalToken)return null;
+  const r=await fetch(url,{...opts,headers:{'Authorization':'Bearer '+gcalToken,'Content-Type':'application/json',...(opts.headers||{})}});
+  if(r.status===401){gcalToken=null;sessionStorage.removeItem('gcal_token');updateCalStatus(false,'Session expired');document.getElementById('calConnectBtn').textContent='Connect Google Calendar';return null}
+  return r.json();
 }
 
-function currentCompany() { return state.companies.find(c => c.id === state.currentCompanyId); }
-function currentLeads() { return currentCompany()?.leads || []; }
-function selectedLead() { return currentLeads().find(l => l.id === state.selectedLeadId); }
-
-// ── RENDERING ──
-function render() {
-  renderCompanySelect();
-  renderStats();
-  renderFilters();
-  renderLeadList();
-  renderDetail();
-  if (!state.selectedLeadId) {
-    document.getElementById('mainLayout').classList.remove('show-detail');
-  }
+async function fetchUpcomingEvents(){
+  const now=new Date().toISOString(),week=new Date(Date.now()+7*864e5).toISOString();
+  const d=await gcalFetch(`${GCAL_API}/calendars/primary/events?timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(week)}&singleEvents=true&orderBy=startTime&maxResults=10`);
+  if(!d||!d.items)return;gcalEvents=d.items;renderUpcomingChips();
 }
 
-function renderCompanySelect() {
-  const sel = document.getElementById('companySelect');
-  sel.innerHTML = state.companies.map(c =>
-    `<option value="${c.id}" ${c.id === state.currentCompanyId ? 'selected' : ''}>${c.name}</option>`
-  ).join('');
-}
-
-function renderStats() {
-  const leads = currentLeads();
-  const now = new Date();
-  const today = now.toISOString().split('T')[0];
-  const weekAgo = new Date(now - 7*24*60*60*1000).toISOString().split('T')[0];
-
-  const total = leads.length;
-  const active = leads.filter(l => l.status !== 'Closed').length;
-  const thisWeek = leads.filter(l => l.createdAt && l.createdAt >= weekAgo).length;
-  const followups = leads.filter(l => l.followupDate && l.followupDate <= today && l.status !== 'Closed').length;
-
-  document.getElementById('statsBar').innerHTML = `
-    <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-label">Total Leads</div></div>
-    <div class="stat-card"><div class="stat-val">${active}</div><div class="stat-label">Active</div></div>
-    <div class="stat-card"><div class="stat-val">${thisWeek}</div><div class="stat-label">This Week</div></div>
-    <div class="stat-card"><div class="stat-val">${followups}</div><div class="stat-label">Follow-ups Due</div></div>
-  `;
-}
-
-function renderFilters() {
-  const tabs = ['All','New','Contacted','Qualified'];
-  document.getElementById('filterTabs').innerHTML = tabs.map(t =>
-    `<button class="filter-tab ${state.currentFilter===t?'active':''}" onclick="setFilter('${t}')">${t}</button>`
-  ).join('');
-}
-
-function setFilter(f) {
-  state.currentFilter = f;
-  renderLeadList();
-  renderFilters();
-}
-
-function renderLeadList() {
-  const leads = currentLeads().filter(l =>
-    state.currentFilter === 'All' || l.status === state.currentFilter
-  ).sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
-
-  const container = document.getElementById('leadList');
-  if (!leads.length) {
-    container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>No leads found${state.currentFilter!=='All'?' for this filter':''}</p>
-    <button class="btn btn-primary" onclick="openAddLead()">+ Add First Lead</button></div>`;
-    return;
-  }
-
-  container.innerHTML = leads.map(l => {
-    const lastAct = l.activities?.length ? l.activities[l.activities.length-1] : null;
-    return `<div class="lead-card ${state.selectedLeadId===l.id?'active':''}" onclick="selectLead('${l.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div>
-          <div class="lead-name">${esc(l.name)}</div>
-          <div class="lead-company">${esc(l.company||'—')}</div>
-        </div>
-        <span class="badge badge-${l.status.toLowerCase()}">${l.status}</span>
-      </div>
-      <div class="lead-meta">
-        ${l.phone?`<span class="lead-meta-item">📞 ${esc(l.phone)}</span>`:''}
-        ${l.email?`<span class="lead-meta-item">✉️ ${esc(l.email)}</span>`:''}
-        ${l.followupDate?`<span class="lead-meta-item">📅 ${formatDate(l.followupDate)}</span>`:''}
-      </div>
-      ${lastAct?`<div style="margin-top:6px;font-size:.75rem;color:var(--text2)">Last: ${esc(lastAct.type)} — ${timeAgo(lastAct.timestamp)}</div>`:''}
-    </div>`;
+function renderUpcomingChips(){
+  const c=document.getElementById('calUpcoming');
+  if(!gcalEvents.length){c.innerHTML='<span style="font-size:.75rem;color:var(--text2)">No events this week</span>';return}
+  c.innerHTML=gcalEvents.slice(0,6).map(ev=>{
+    const s=ev.start.dateTime?new Date(ev.start.dateTime):new Date(ev.start.date);
+    const t=ev.start.dateTime?s.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}):'All day';
+    const dd=s.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    return `<div class="cal-event-chip"><span class="time">${dd} ${t}</span> ${esc((ev.summary||'Event').substring(0,25))}</div>`;
   }).join('');
 }
 
-function renderDetail() {
-  const panel = document.getElementById('detailPanel');
-  const lead = selectedLead();
-  if (!lead) {
-    panel.innerHTML = `<div class="detail-empty"><div class="icon">📋</div><p>Select a lead to view details</p></div>`;
-    return;
-  }
+async function fetchCalendarEvents(){
+  if(!gcalToken){alert('Connect Google Calendar first');return}
+  const b=document.getElementById('calendarViewBody');
+  b.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px" class="syncing">Loading...</div>';
+  const now=new Date().toISOString(),mo=new Date(Date.now()+30*864e5).toISOString();
+  const d=await gcalFetch(`${GCAL_API}/calendars/primary/events?timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(mo)}&singleEvents=true&orderBy=startTime&maxResults=30`);
+  if(!d||!d.items){b.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px">Could not load</div>';return}
+  if(!d.items.length){b.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px">No events next 30 days</div>';return}
+  b.innerHTML=d.items.map(ev=>{
+    const s=ev.start.dateTime?new Date(ev.start.dateTime):new Date(ev.start.date);
+    const e=ev.end&&ev.end.dateTime?new Date(ev.end.dateTime):null;
+    const t=ev.start.dateTime?s.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})+(e?' — '+e.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}):''):'All day';
+    const dd=s.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    return `<div class="cal-event-item"><div class="cal-icon">📅</div><div class="cal-info"><div class="cal-title">${esc(ev.summary||'No title')}</div><div class="cal-time">${dd} · ${t}</div>${ev.location?`<div style="font-size:.75rem;color:var(--text2);margin-top:2px">📍 ${esc(ev.location)}</div>`:''}</div></div>`;
+  }).join('');
+}
 
-  const referrer = lead.referredBy ? findLeadById(lead.referredBy) : null;
-  const referrals = currentLeads().filter(l => l.referredBy === lead.id);
-  const otherCompanies = state.companies.filter(c => c.id !== state.currentCompanyId);
+function openCalendarPanel(){if(!gcalToken){handleCalAuth();return}openModal('calendarViewModal');fetchCalendarEvents()}
 
-  panel.innerHTML = `
+function openScheduleAppointment(){
+  if(!gcalToken){alert('Connect Google Calendar first (📅 in header)');return}
+  const lead=selectedLead();if(!lead)return;
+  const cn=currentCompany()?.name||'';
+  document.getElementById('apptTitle').value=`Meeting with ${lead.name}${lead.company?' ('+lead.company+')':''} — ${cn}`;
+  document.getElementById('apptDate').value=lead.followupDate||new Date(Date.now()+864e5).toISOString().split('T')[0];
+  document.getElementById('apptStart').value='09:00';document.getElementById('apptEnd').value='10:00';
+  document.getElementById('apptDesc').value=`Lead: ${lead.name}\nCompany: ${lead.company||'—'}\nPhone: ${lead.phone||'—'}\nEmail: ${lead.email||'—'}\nStatus: ${lead.status}\n\nNotes: ${lead.notes||'—'}`;
+  document.getElementById('apptLocation').value='';
+  openModal('appointmentModal');
+}
+
+async function createCalendarEvent(){
+  if(!gcalToken){alert('Not connected');return}
+  const title=document.getElementById('apptTitle').value.trim(),date=document.getElementById('apptDate').value,st=document.getElementById('apptStart').value,et=document.getElementById('apptEnd').value;
+  if(!title||!date||!st||!et){alert('Fill in all required fields');return}
+  const btn=document.getElementById('apptSaveBtn');btn.textContent='⏳ Creating...';btn.disabled=true;
+  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+  try{
+    const data=await gcalFetch(`${GCAL_API}/calendars/primary/events`,{method:'POST',body:JSON.stringify({
+      summary:title,description:document.getElementById('apptDesc').value.trim(),location:document.getElementById('apptLocation').value.trim(),
+      start:{dateTime:`${date}T${st}:00`,timeZone:tz},end:{dateTime:`${date}T${et}:00`,timeZone:tz},
+      reminders:{useDefault:false,overrides:[{method:'popup',minutes:30},{method:'popup',minutes:10}]}
+    })});
+    if(data&&data.id){
+      const lead=selectedLead();
+      if(lead){if(!lead.activities)lead.activities=[];lead.activities.push({type:'Meeting',description:`📅 Scheduled: ${title} on ${formatDate(date)} at ${st}`,timestamp:new Date().toISOString(),calendarEventId:data.id});if(lead.status==='New')lead.status='Contacted';saveData()}
+      closeModal('appointmentModal');fetchUpcomingEvents();render();if(lead)selectLead(lead.id);
+      alert('✅ Appointment created in Google Calendar!');
+    }else{alert('Failed to create event')}
+  }catch(err){console.error(err);alert('Error: '+err.message)}
+  btn.textContent='📅 Create in Google Calendar';btn.disabled=false;
+}
+
+// ── DATA LAYER ──
+const DEFAULT_COMPANIES=[{id:'c1',name:'T&T Design',leads:[]},{id:'c2',name:'OVB',leads:[]}];
+let state={companies:[],currentCompanyId:null,selectedLeadId:null,currentFilter:'All'};
+function generateId(){return 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)}
+function loadData(){
+  const saved=localStorage.getItem('leadforge_data');
+  if(saved){try{state={...state,...JSON.parse(saved)}}catch(e){initDefaults()}}
+  else{const old=localStorage.getItem('leads');if(old){try{const p=JSON.parse(old);const c=JSON.parse(JSON.stringify(DEFAULT_COMPANIES));c[0].leads=Array.isArray(p)?p:[];state.companies=c;state.currentCompanyId=c[0].id;localStorage.removeItem('leads')}catch(e){initDefaults()}}else initDefaults()}
+  if(!state.companies.length)initDefaults();if(!state.currentCompanyId||!state.companies.find(c=>c.id===state.currentCompanyId))state.currentCompanyId=state.companies[0].id;
+}
+function initDefaults(){state.companies=JSON.parse(JSON.stringify(DEFAULT_COMPANIES));state.currentCompanyId=state.companies[0].id}
+function saveData(){localStorage.setItem('leadforge_data',JSON.stringify({companies:state.companies,currentCompanyId:state.currentCompanyId}))}
+function currentCompany(){return state.companies.find(c=>c.id===state.currentCompanyId)}
+function currentLeads(){return currentCompany()?.leads||[]}
+function selectedLead(){return currentLeads().find(l=>l.id===state.selectedLeadId)}
+
+// ── RENDERING ──
+function render(){renderCompanySelect();renderStats();renderFilters();renderLeadList();renderDetail();if(!state.selectedLeadId)document.getElementById('mainLayout').classList.remove('show-detail')}
+function renderCompanySelect(){document.getElementById('companySelect').innerHTML=state.companies.map(c=>`<option value="${c.id}" ${c.id===state.currentCompanyId?'selected':''}>${c.name}</option>`).join('')}
+function renderStats(){
+  const leads=currentLeads(),now=new Date(),today=now.toISOString().split('T')[0],weekAgo=new Date(now-7*864e5).toISOString().split('T')[0];
+  document.getElementById('statsBar').innerHTML=`<div class="stat-card"><div class="stat-val">${leads.length}</div><div class="stat-label">Total Leads</div></div><div class="stat-card"><div class="stat-val">${leads.filter(l=>l.status!=='Closed').length}</div><div class="stat-label">Active</div></div><div class="stat-card"><div class="stat-val">${leads.filter(l=>l.createdAt&&l.createdAt>=weekAgo).length}</div><div class="stat-label">This Week</div></div><div class="stat-card"><div class="stat-val">${leads.filter(l=>l.followupDate&&l.followupDate<=today&&l.status!=='Closed').length}</div><div class="stat-label">Follow-ups Due</div></div>`;
+}
+function renderFilters(){document.getElementById('filterTabs').innerHTML=['All','New','Contacted','Qualified'].map(t=>`<button class="filter-tab ${state.currentFilter===t?'active':''}" onclick="setFilter('${t}')">${t}</button>`).join('')}
+function setFilter(f){state.currentFilter=f;renderLeadList();renderFilters()}
+function renderLeadList(){
+  const leads=currentLeads().filter(l=>state.currentFilter==='All'||l.status===state.currentFilter).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  const c=document.getElementById('leadList');
+  if(!leads.length){c.innerHTML=`<div class="empty-state"><div class="icon">🔍</div><p>No leads found${state.currentFilter!=='All'?' for this filter':''}</p><button class="btn btn-primary" onclick="openAddLead()">+ Add First Lead</button></div>`;return}
+  c.innerHTML=leads.map(l=>{const la=l.activities?.length?l.activities[l.activities.length-1]:null;return`<div class="lead-card ${state.selectedLeadId===l.id?'active':''}" onclick="selectLead('${l.id}')"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="lead-name">${esc(l.name)}</div><div class="lead-company">${esc(l.company||'—')}</div></div><span class="badge badge-${l.status.toLowerCase()}">${l.status}</span></div><div class="lead-meta">${l.phone?`<span class="lead-meta-item">📞 ${esc(l.phone)}</span>`:''}${l.email?`<span class="lead-meta-item">✉️ ${esc(l.email)}</span>`:''}${l.followupDate?`<span class="lead-meta-item">📅 ${formatDate(l.followupDate)}</span>`:''}</div>${la?`<div style="margin-top:6px;font-size:.75rem;color:var(--text2)">Last: ${esc(la.type)} — ${timeAgo(la.timestamp)}</div>`:''}</div>`}).join('');
+}
+function renderDetail(){
+  const panel=document.getElementById('detailPanel'),lead=selectedLead();
+  if(!lead){panel.innerHTML=`<div class="detail-empty"><div class="icon">📋</div><p>Select a lead to view details</p></div>`;return}
+  const ref=lead.referredBy?findLeadById(lead.referredBy):null,refs=currentLeads().filter(l=>l.referredBy===lead.id),oc=state.companies.filter(c=>c.id!==state.currentCompanyId);
+  panel.innerHTML=`
     <button class="btn btn-secondary btn-sm back-btn-mobile" onclick="deselectLead()" style="margin-bottom:12px">← Back</button>
-    <div class="detail-header">
-      <div>
-        <div class="detail-name">${esc(lead.name)}</div>
-        <div style="margin-top:6px">
-          <select class="status-select" onchange="changeStatus('${lead.id}',this.value)">
-            ${['New','Contacted','Qualified','Closed'].map(s=>
-              `<option value="${s}" ${lead.status===s?'selected':''}>${s}</option>`
-            ).join('')}
-          </select>
-        </div>
-      </div>
-      <span class="badge badge-${lead.status.toLowerCase()}">${lead.status}</span>
+    <div class="detail-header"><div><div class="detail-name">${esc(lead.name)}</div><div style="margin-top:6px"><select class="status-select" onchange="changeStatus('${lead.id}',this.value)">${['New','Contacted','Qualified','Closed'].map(s=>`<option value="${s}" ${lead.status===s?'selected':''}>${s}</option>`).join('')}</select></div></div><span class="badge badge-${lead.status.toLowerCase()}">${lead.status}</span></div>
+    ${ref?`<div class="referred-by" onclick="selectLead('${ref.id}')">🔗 Referred by <strong>${esc(ref.name)}</strong></div>`:''}
+    <div class="detail-section"><div class="detail-section-title">📇 Contact Info</div><div class="contact-grid"><div class="contact-item"><div class="contact-label">Phone</div><div class="contact-value">${esc(lead.phone||'—')}</div></div><div class="contact-item"><div class="contact-label">Email</div><div class="contact-value">${esc(lead.email||'—')}</div></div><div class="contact-item"><div class="contact-label">Company</div><div class="contact-value">${esc(lead.company||'—')}</div></div><div class="contact-item"><div class="contact-label">Follow-up</div><div class="contact-value">${lead.followupDate?formatDate(lead.followupDate):'—'}</div></div></div></div>
+    ${lead.notes?`<div class="detail-section"><div class="detail-section-title">📝 Notes</div><div class="notes-box">${esc(lead.notes)}</div></div>`:''}
+    <div class="detail-section"><div class="detail-section-title">⚡ Actions</div><div class="actions-grid">
+      <button class="btn btn-secondary action-btn" onclick="openActivity('Call')">📞 Log Call</button>
+      <button class="btn btn-secondary action-btn" onclick="openActivity('Email')">✉️ Log Email</button>
+      <button class="btn btn-secondary action-btn" onclick="openActivity('Meeting')">🤝 Meeting</button>
+      <button class="btn btn-secondary action-btn" onclick="openActivity('Note')">📝 Add Note</button>
+      <button class="btn btn-secondary action-btn" onclick="openReferral()">🔗 Referral</button>
+      <button class="btn btn-cal action-btn" onclick="openScheduleAppointment()">📅 Schedule</button>
+    </div></div>
+    ${oc.length?`<div class="detail-section"><div class="detail-section-title">🔄 Transfer</div><div class="transfer-section"><select class="transfer-select" id="transferTarget">${oc.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-secondary btn-sm" onclick="transferLead('${lead.id}')">Transfer</button></div></div>`:''}
+    ${refs.length?`<div class="detail-section"><div class="detail-section-title">🔗 Referrals (${refs.length})</div>${refs.map(r=>`<div class="referral-card" onclick="selectLead('${r.id}')"><div style="font-weight:600;font-size:.85rem">${esc(r.name)}</div><div style="font-size:.75rem;color:var(--text2)">${esc(r.company||'—')} · <span class="badge badge-${r.status.toLowerCase()}">${r.status}</span></div></div>`).join('')}</div>`:''}
+    <div class="detail-section"><div class="detail-section-title">📊 Activity History (${(lead.activities||[]).length})</div>
+      ${(lead.activities||[]).length?(lead.activities||[]).slice().reverse().map(a=>`<div class="activity-item"><div class="activity-icon ${a.type.toLowerCase()}">${actIcon(a.type)}</div><div><div style="font-weight:600;font-size:.8rem">${esc(a.type)}</div><div class="activity-desc">${esc(a.description)}</div><div class="activity-time">${formatDateTime(a.timestamp)}</div></div></div>`).join(''):'<div style="color:var(--text2);font-size:.85rem">No activities yet</div>'}
     </div>
-
-    ${referrer ? `<div class="referred-by" onclick="selectLead('${referrer.id}')">🔗 Referred by <strong>${esc(referrer.name)}</strong></div>` : ''}
-
-    <div class="detail-section">
-      <div class="detail-section-title">📇 Contact Info</div>
-      <div class="contact-grid">
-        <div class="contact-item"><div class="contact-label">Phone</div><div class="contact-value">${esc(lead.phone||'—')}</div></div>
-        <div class="contact-item"><div class="contact-label">Email</div><div class="contact-value">${esc(lead.email||'—')}</div></div>
-        <div class="contact-item"><div class="contact-label">Company</div><div class="contact-value">${esc(lead.company||'—')}</div></div>
-        <div class="contact-item"><div class="contact-label">Follow-up</div><div class="contact-value">${lead.followupDate?formatDate(lead.followupDate):'—'}</div></div>
-      </div>
-    </div>
-
-    ${lead.notes ? `<div class="detail-section"><div class="detail-section-title">📝 Notes</div><div class="notes-box">${esc(lead.notes)}</div></div>` : ''}
-
-    <div class="detail-section">
-      <div class="detail-section-title">⚡ Actions</div>
-      <div class="actions-grid">
-        <button class="btn btn-secondary action-btn" onclick="openActivity('Call')">📞 Log Call</button>
-        <button class="btn btn-secondary action-btn" onclick="openActivity('Email')">✉️ Log Email</button>
-        <button class="btn btn-secondary action-btn" onclick="openActivity('Meeting')">🤝 Meeting</button>
-        <button class="btn btn-secondary action-btn" onclick="openActivity('Note')">📝 Add Note</button>
-        <button class="btn btn-secondary action-btn" onclick="openReferral()">🔗 Add Referral</button>
-      </div>
-    </div>
-
-    ${otherCompanies.length ? `<div class="detail-section">
-      <div class="detail-section-title">🔄 Transfer to Company</div>
-      <div class="transfer-section">
-        <select class="transfer-select" id="transferTarget">
-          ${otherCompanies.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}
-        </select>
-        <button class="btn btn-secondary btn-sm" onclick="transferLead('${lead.id}')">Transfer</button>
-      </div>
-    </div>` : ''}
-
-    ${referrals.length ? `<div class="detail-section">
-      <div class="detail-section-title">🔗 Referrals (${referrals.length})</div>
-      ${referrals.map(r=>`<div class="referral-card" onclick="selectLead('${r.id}')">
-        <div style="font-weight:600;font-size:.85rem">${esc(r.name)}</div>
-        <div style="font-size:.75rem;color:var(--text2)">${esc(r.company||'—')} · <span class="badge badge-${r.status.toLowerCase()}">${r.status}</span></div>
-      </div>`).join('')}
-    </div>` : ''}
-
-    <div class="detail-section">
-      <div class="detail-section-title">📊 Activity History (${(lead.activities||[]).length})</div>
-      ${(lead.activities||[]).length ? (lead.activities||[]).slice().reverse().map(a => `
-        <div class="activity-item">
-          <div class="activity-icon ${a.type.toLowerCase()}">${actIcon(a.type)}</div>
-          <div>
-            <div style="font-weight:600;font-size:.8rem">${esc(a.type)}</div>
-            <div class="activity-desc">${esc(a.description)}</div>
-            <div class="activity-time">${formatDateTime(a.timestamp)}</div>
-          </div>
-        </div>
-      `).join('') : '<div style="color:var(--text2);font-size:.85rem">No activities yet</div>'}
-    </div>
-
-    <div class="detail-section" style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">
-      <button class="btn btn-danger btn-sm" onclick="deleteLead('${lead.id}')">🗑️ Delete Lead</button>
-      <span style="font-size:.7rem;color:var(--text2);margin-left:8px">Created ${formatDateTime(lead.createdAt)}</span>
-    </div>
-  `;
+    <div class="detail-section" style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)"><button class="btn btn-danger btn-sm" onclick="deleteLead('${lead.id}')">🗑️ Delete Lead</button><span style="font-size:.7rem;color:var(--text2);margin-left:8px">Created ${formatDateTime(lead.createdAt)}</span></div>`;
 }
 
 // ── ACTIONS ──
-function switchCompany(id) {
-  state.currentCompanyId = id;
-  state.selectedLeadId = null;
-  state.currentFilter = 'All';
-  saveData();
-  render();
+function switchCompany(id){state.currentCompanyId=id;state.selectedLeadId=null;state.currentFilter='All';saveData();render()}
+function selectLead(id){state.selectedLeadId=id;renderLeadList();renderDetail();document.getElementById('mainLayout').classList.add('show-detail');document.getElementById('detailPanel').scrollTop=0}
+function deselectLead(){state.selectedLeadId=null;document.getElementById('mainLayout').classList.remove('show-detail');renderLeadList();renderDetail()}
+function openAddLead(){document.getElementById('leadModalTitle').textContent='Add Lead';document.getElementById('editLeadId').value='';document.getElementById('leadName').value='';document.getElementById('leadCompany').value='';document.getElementById('leadPhone').value='';document.getElementById('leadEmail').value='';document.getElementById('leadStatus').value='New';document.getElementById('leadFollowup').value='';document.getElementById('leadNotes').value='';openModal('leadModal')}
+function saveLead(){
+  const name=document.getElementById('leadName').value.trim();if(!name){document.getElementById('leadName').style.borderColor='var(--danger)';return}
+  const company=currentCompany(),editId=document.getElementById('editLeadId').value;
+  const ld={name,company:document.getElementById('leadCompany').value.trim(),phone:document.getElementById('leadPhone').value.trim(),email:document.getElementById('leadEmail').value.trim(),status:document.getElementById('leadStatus').value,followupDate:document.getElementById('leadFollowup').value,notes:document.getElementById('leadNotes').value.trim()};
+  if(editId){const l=company.leads.find(l=>l.id===editId);if(l)Object.assign(l,ld)}
+  else company.leads.push({id:generateId(),...ld,activities:[],referredBy:null,createdAt:new Date().toISOString()});
+  saveData();closeModal('leadModal');render();
 }
-
-function selectLead(id) {
-  state.selectedLeadId = id;
-  renderLeadList();
-  renderDetail();
-  document.getElementById('mainLayout').classList.add('show-detail');
-  // Scroll detail into view on desktop
-  document.getElementById('detailPanel').scrollTop = 0;
+function changeStatus(id,s){const l=currentLeads().find(l=>l.id===id);if(l){l.status=s;saveData();render();selectLead(id)}}
+function deleteLead(id){if(!confirm('Delete this lead?'))return;const c=currentCompany();c.leads=c.leads.filter(l=>l.id!==id);c.leads.forEach(l=>{if(l.referredBy===id)l.referredBy=null});state.selectedLeadId=null;saveData();render()}
+function openActivity(type){document.getElementById('activityType').value=type;document.getElementById('activityModalTitle').textContent='Log '+type;document.getElementById('activityDesc').value='';openModal('activityModal')}
+function saveActivity(){
+  const lead=selectedLead();if(!lead)return;const type=document.getElementById('activityType').value,desc=document.getElementById('activityDesc').value.trim()||type+' logged';
+  if(!lead.activities)lead.activities=[];lead.activities.push({type,description:desc,timestamp:new Date().toISOString()});
+  if(lead.status==='New'&&['Call','Email','Meeting'].includes(type))lead.status='Contacted';
+  saveData();closeModal('activityModal');render();selectLead(lead.id);
 }
-
-function deselectLead() {
-  state.selectedLeadId = null;
-  document.getElementById('mainLayout').classList.remove('show-detail');
-  renderLeadList();
-  renderDetail();
+function openReferral(){document.getElementById('refName').value='';document.getElementById('refCompany').value='';document.getElementById('refPhone').value='';document.getElementById('refEmail').value='';document.getElementById('refNotes').value='';openModal('referralModal')}
+function saveReferral(){
+  const name=document.getElementById('refName').value.trim();if(!name){document.getElementById('refName').style.borderColor='var(--danger)';return}
+  const p=selectedLead();if(!p)return;
+  currentCompany().leads.push({id:generateId(),name,company:document.getElementById('refCompany').value.trim(),phone:document.getElementById('refPhone').value.trim(),email:document.getElementById('refEmail').value.trim(),status:'New',followupDate:'',notes:document.getElementById('refNotes').value.trim(),activities:[],referredBy:p.id,createdAt:new Date().toISOString()});
+  saveData();closeModal('referralModal');render();selectLead(p.id);
 }
-
-function openAddLead() {
-  document.getElementById('leadModalTitle').textContent = 'Add Lead';
-  document.getElementById('editLeadId').value = '';
-  document.getElementById('leadName').value = '';
-  document.getElementById('leadCompany').value = '';
-  document.getElementById('leadPhone').value = '';
-  document.getElementById('leadEmail').value = '';
-  document.getElementById('leadStatus').value = 'New';
-  document.getElementById('leadFollowup').value = '';
-  document.getElementById('leadNotes').value = '';
-  openModal('leadModal');
+function transferLead(leadId){
+  const tid=document.getElementById('transferTarget').value;if(!tid)return;
+  const tc=state.companies.find(c=>c.id===tid);if(!confirm('Transfer to '+tc.name+'?'))return;
+  const l=currentLeads().find(l=>l.id===leadId);if(!l)return;
+  tc.leads.push({id:generateId(),name:l.name,company:l.company,phone:l.phone,email:l.email,status:'New',followupDate:l.followupDate,notes:l.notes,activities:[],referredBy:null,createdAt:new Date().toISOString()});
+  const sc=currentCompany();sc.leads=sc.leads.filter(x=>x.id!==leadId);sc.leads.forEach(x=>{if(x.referredBy===leadId)x.referredBy=null});
+  state.selectedLeadId=null;saveData();render();
 }
-
-function saveLead() {
-  const name = document.getElementById('leadName').value.trim();
-  if (!name) { document.getElementById('leadName').style.borderColor = 'var(--danger)'; return; }
-
-  const company = currentCompany();
-  const editId = document.getElementById('editLeadId').value;
-  const leadData = {
-    name,
-    company: document.getElementById('leadCompany').value.trim(),
-    phone: document.getElementById('leadPhone').value.trim(),
-    email: document.getElementById('leadEmail').value.trim(),
-    status: document.getElementById('leadStatus').value,
-    followupDate: document.getElementById('leadFollowup').value,
-    notes: document.getElementById('leadNotes').value.trim()
-  };
-
-  if (editId) {
-    const lead = company.leads.find(l => l.id === editId);
-    if (lead) Object.assign(lead, leadData);
-  } else {
-    company.leads.push({
-      id: generateId(),
-      ...leadData,
-      activities: [],
-      referredBy: null,
-      createdAt: new Date().toISOString()
-    });
-  }
-
-  saveData();
-  closeModal('leadModal');
-  render();
-}
-
-function changeStatus(leadId, newStatus) {
-  const lead = currentLeads().find(l => l.id === leadId);
-  if (lead) { lead.status = newStatus; saveData(); render(); selectLead(leadId); }
-}
-
-function deleteLead(id) {
-  if (!confirm('Delete this lead permanently?')) return;
-  const company = currentCompany();
-  company.leads = company.leads.filter(l => l.id !== id);
-  // Remove referredBy references
-  company.leads.forEach(l => { if (l.referredBy === id) l.referredBy = null; });
-  state.selectedLeadId = null;
-  saveData();
-  render();
-}
-
-function openActivity(type) {
-  document.getElementById('activityType').value = type;
-  document.getElementById('activityModalTitle').textContent = `Log ${type}`;
-  document.getElementById('activityDesc').value = '';
-  openModal('activityModal');
-}
-
-function saveActivity() {
-  const lead = selectedLead();
-  if (!lead) return;
-  const type = document.getElementById('activityType').value;
-  const desc = document.getElementById('activityDesc').value.trim() || `${type} logged`;
-
-  if (!lead.activities) lead.activities = [];
-  lead.activities.push({ type, description: desc, timestamp: new Date().toISOString() });
-
-  // Auto-update status from New to Contacted
-  if (lead.status === 'New' && ['Call','Email','Meeting'].includes(type)) {
-    lead.status = 'Contacted';
-  }
-
-  saveData();
-  closeModal('activityModal');
-  render();
-  selectLead(lead.id);
-}
-
-function openReferral() {
-  document.getElementById('refName').value = '';
-  document.getElementById('refCompany').value = '';
-  document.getElementById('refPhone').value = '';
-  document.getElementById('refEmail').value = '';
-  document.getElementById('refNotes').value = '';
-  openModal('referralModal');
-}
-
-function saveReferral() {
-  const name = document.getElementById('refName').value.trim();
-  if (!name) { document.getElementById('refName').style.borderColor = 'var(--danger)'; return; }
-  const parentLead = selectedLead();
-  if (!parentLead) return;
-
-  const newLead = {
-    id: generateId(),
-    name,
-    company: document.getElementById('refCompany').value.trim(),
-    phone: document.getElementById('refPhone').value.trim(),
-    email: document.getElementById('refEmail').value.trim(),
-    status: 'New',
-    followupDate: '',
-    notes: document.getElementById('refNotes').value.trim(),
-    activities: [],
-    referredBy: parentLead.id,
-    createdAt: new Date().toISOString()
-  };
-
-  currentCompany().leads.push(newLead);
-  saveData();
-  closeModal('referralModal');
-  render();
-  selectLead(parentLead.id);
-}
-
-function transferLead(leadId) {
-  const targetId = document.getElementById('transferTarget').value;
-  if (!targetId) return;
-  const targetCompany = state.companies.find(c => c.id === targetId);
-  if (!confirm(`Transfer this lead to ${targetCompany.name}?`)) return;
-
-  const lead = currentLeads().find(l => l.id === leadId);
-  if (!lead) return;
-
-  const transferred = {
-    id: generateId(),
-    name: lead.name,
-    company: lead.company,
-    phone: lead.phone,
-    email: lead.email,
-    status: 'New',
-    followupDate: lead.followupDate,
-    notes: lead.notes,
-    activities: [],
-    referredBy: null,
-    createdAt: new Date().toISOString()
-  };
-
-  targetCompany.leads.push(transferred);
-  const srcCompany = currentCompany();
-  srcCompany.leads = srcCompany.leads.filter(l => l.id !== leadId);
-  srcCompany.leads.forEach(l => { if (l.referredBy === leadId) l.referredBy = null; });
-
-  state.selectedLeadId = null;
-  saveData();
-  render();
-}
-
-function findLeadById(id) {
-  return currentLeads().find(l => l.id === id);
-}
+function findLeadById(id){return currentLeads().find(l=>l.id===id)}
 
 // ── SETTINGS ──
-function openSettings() {
-  const body = document.getElementById('settingsBody');
-  body.innerHTML = `
-    <div style="margin-bottom:16px">
-      ${state.companies.map(c => `
-        <div class="company-list-item">
-          <div>
-            <div class="name">${esc(c.name)}</div>
-            <div class="count">${c.leads.length} leads</div>
-          </div>
-          <div class="actions">
-            <button class="btn btn-secondary btn-sm" onclick="exportCompany('${c.id}')">📥 Export</button>
-            ${state.companies.length > 1 ? `<button class="btn btn-danger btn-sm" onclick="deleteCompany('${c.id}')">🗑️</button>` : ''}
-          </div>
-        </div>
-      `).join('')}
-    </div>
-    <button class="btn btn-primary" onclick="closeModal('settingsModal');openModal('addCompanyModal')">+ Add Company</button>
-  `;
+function openSettings(){
+  document.getElementById('settingsBody').innerHTML=`<div style="margin-bottom:16px">${state.companies.map(c=>`<div class="company-list-item"><div><div class="name">${esc(c.name)}</div><div class="count">${c.leads.length} leads</div></div><div class="actions"><button class="btn btn-secondary btn-sm" onclick="exportCompany('${c.id}')">📥 Export</button>${state.companies.length>1?`<button class="btn btn-danger btn-sm" onclick="deleteCompany('${c.id}')">🗑️</button>`:''}</div></div>`).join('')}</div><button class="btn btn-primary" onclick="closeModal('settingsModal');openModal('addCompanyModal')">+ Add Company</button>`;
   openModal('settingsModal');
 }
-
-function addCompany() {
-  const name = document.getElementById('newCompanyName').value.trim();
-  if (!name) { document.getElementById('newCompanyName').style.borderColor = 'var(--danger)'; return; }
-
-  state.companies.push({ id: generateId(), name, leads: [] });
-  saveData();
-  closeModal('addCompanyModal');
-  render();
-  openSettings();
+function addCompany(){const n=document.getElementById('newCompanyName').value.trim();if(!n){document.getElementById('newCompanyName').style.borderColor='var(--danger)';return}state.companies.push({id:generateId(),name:n,leads:[]});saveData();closeModal('addCompanyModal');render();openSettings()}
+function deleteCompany(id){
+  const c=state.companies.find(x=>x.id===id);if(!c||!confirm(`Delete "${c.name}"? Data exported first.`))return;
+  if(c.leads.length)exportCompanyData(c);state.companies=state.companies.filter(x=>x.id!==id);
+  if(state.currentCompanyId===id){state.currentCompanyId=state.companies[0]?.id;state.selectedLeadId=null}
+  saveData();render();if(document.getElementById('settingsModal').classList.contains('show'))openSettings();
+}
+function exportCompany(id){const c=state.companies.find(x=>x.id===id);if(c)exportCompanyData(c)}
+function exportCompanyData(c){
+  const d=c.leads.map(l=>({Name:l.name,Company:l.company||'',Phone:l.phone||'',Email:l.email||'',Status:l.status,'Follow-up':l.followupDate||'',Created:l.createdAt?new Date(l.createdAt).toLocaleDateString():'','Referred By':l.referredBy?(c.leads.find(x=>x.id===l.referredBy)?.name||''):'',Activities:(l.activities||[]).length,Referrals:c.leads.filter(x=>x.referredBy===l.id).length}));
+  if(!d.length)d.push({Name:'(No leads)',Company:'',Phone:'',Email:'',Status:'','Follow-up':'',Created:'','Referred By':'',Activities:0,Referrals:0});
+  const ws=XLSX.utils.json_to_sheet(d),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Leads');
+  XLSX.writeFile(wb,`${c.name.replace(/[^a-zA-Z0-9&]/g,'_')}_Leads_${new Date().toISOString().split('T')[0].replace(/-/g,'')}.xlsx`);
 }
 
-function deleteCompany(id) {
-  const company = state.companies.find(c => c.id === id);
-  if (!company) return;
-  if (!confirm(`Delete "${company.name}" and all its ${company.leads.length} leads? Data will be exported first.`)) return;
+// ── MODALS ──
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show')})});
 
-  // Export first
-  if (company.leads.length) exportCompanyData(company);
-
-  state.companies = state.companies.filter(c => c.id !== id);
-  if (state.currentCompanyId === id) {
-    state.currentCompanyId = state.companies[0]?.id;
-    state.selectedLeadId = null;
-  }
-  saveData();
-  render();
-  if (document.getElementById('settingsModal').classList.contains('show')) openSettings();
-}
-
-function exportCompany(id) {
-  const company = state.companies.find(c => c.id === id);
-  if (company) exportCompanyData(company);
-}
-
-function exportCompanyData(company) {
-  const data = company.leads.map(l => ({
-    'Name': l.name,
-    'Company': l.company || '',
-    'Phone': l.phone || '',
-    'Email': l.email || '',
-    'Status': l.status,
-    'Follow-up Date': l.followupDate || '',
-    'Created Date': l.createdAt ? new Date(l.createdAt).toLocaleDateString() : '',
-    'Referred By': l.referredBy ? (company.leads.find(x => x.id === l.referredBy)?.name || '') : '',
-    'Total Activities': (l.activities || []).length,
-    'Total Referrals': company.leads.filter(x => x.referredBy === l.id).length
-  }));
-
-  if (!data.length) data.push({ 'Name': '(No leads)', 'Company': '', 'Phone': '', 'Email': '', 'Status': '', 'Follow-up Date': '', 'Created Date': '', 'Referred By': '', 'Total Activities': 0, 'Total Referrals': 0 });
-
-  const ws = XLSX.utils.json_to_sheet(data);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Leads');
-  const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
-  const filename = `${company.name.replace(/[^a-zA-Z0-9&]/g, '_')}_Leads_${dateStr}.xlsx`;
-  XLSX.writeFile(wb, filename);
-}
-
-// ── MODAL HELPERS ──
-function openModal(id) {
-  document.getElementById(id).classList.add('show');
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('show');
-}
-
-// Close modals on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('show');
-  });
-});
-
-// ── UTILITY ──
-function esc(s) {
-  if (!s) return '';
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-function actIcon(type) {
-  return { Call: '📞', Email: '✉️', Meeting: '🤝', Note: '📝' }[type] || '📌';
-}
-
-function formatDate(d) {
-  if (!d) return '';
-  try { return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
-  catch(e) { return d; }
-}
-
-function formatDateTime(d) {
-  if (!d) return '';
-  try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
-  catch(e) { return d; }
-}
-
-function timeAgo(ts) {
-  if (!ts) return '';
-  const diff = Date.now() - new Date(ts).getTime();
-  const mins = Math.floor(diff/60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins/60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs/24);
-  return `${days}d ago`;
-}
-
-// Reset border on focus
-document.querySelectorAll('.form-input,.form-textarea').forEach(el => {
-  el.addEventListener('focus', () => el.style.borderColor = '');
-});
+// ── UTILS ──
+function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function actIcon(t){return{Call:'📞',Email:'✉️',Meeting:'🤝',Note:'📝'}[t]||'📌'}
+function formatDate(d){if(!d)return'';try{return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}catch(e){return d}}
+function formatDateTime(d){if(!d)return'';try{return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return d}}
+function timeAgo(ts){if(!ts)return'';const d=Date.now()-new Date(ts).getTime(),m=Math.floor(d/6e4);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago'}
+document.querySelectorAll('.form-input,.form-textarea').forEach(el=>{el.addEventListener('focus',()=>el.style.borderColor='')});
 
 // ── INIT ──
-loadData();
-render();
+loadData();render();initGoogleCalendar();
 </script>
 </body>
 </html>
